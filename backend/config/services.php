@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'zenn' => [
+        'base_url' => env('ZENN_API_BASE_URL', 'https://zenn.dev/api'),
+        'timeout' => (int) env('ZENN_API_TIMEOUT', 10),
+    ],
+
 ];
