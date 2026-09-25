@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use App\Enums\ArticleType;
+use Database\Factories\ArticleFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -20,6 +22,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 ])]
 class Article extends Model
 {
+    /** @use HasFactory<ArticleFactory> */
+    use HasFactory;
+
     /**
      * Tags whose latest 100 include this article.
      *
@@ -28,6 +33,16 @@ class Article extends Model
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class);
+    }
+
+    /**
+     * Users who bookmarked this article.
+     *
+     * @return BelongsToMany<User, $this>
+     */
+    public function bookmarkedBy(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'bookmarks');
     }
 
     /**
