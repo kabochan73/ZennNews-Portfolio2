@@ -30,6 +30,17 @@ docker compose down    # 停止
 | バックエンド（Laravel） | http://localhost:8000 |
 | DB（PostgreSQL 17） | localhost:5432（user: `zennnews` / password: `secret`） |
 
+### 記事の取得
+
+Zenn から記事を取得して DB に保存する。本番では Railway Cron がオプションなしで毎時実行する。
+
+```bash
+docker compose exec backend php artisan zenn:fetch-articles --all            # 全タグ（約1分。ローカルのデータ作成用）
+docker compose exec backend php artisan zenn:fetch-articles --tag=nextjs     # 指定したタグだけ
+docker compose exec backend php artisan zenn:fetch-articles --hour=5         # 5時の担当のタグ
+docker compose exec backend php artisan zenn:fetch-articles                  # 現在の日本時間の担当のタグ
+```
+
 ### テスト
 
 ```bash
