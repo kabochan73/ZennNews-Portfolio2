@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AccountController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\Auth\RegisterController;
+use App\Http\Controllers\Api\TagController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', RegisterController::class);
@@ -14,4 +15,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/me', [AccountController::class, 'show']);
     Route::delete('/me', [AccountController::class, 'destroy']);
+
+    Route::get('/tags', [TagController::class, 'index']);
 });
