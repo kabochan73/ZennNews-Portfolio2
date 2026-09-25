@@ -81,6 +81,27 @@ test('a non-string username is a validation error, not a server error', function
         ->assertJsonValidationErrors(['username']);
 });
 
+test('sign-ups are limited to 10 per minute per IP address', function () {
+    foreach (range(1, 10) as $i) {
+        $this->postJson('/api/register', [
+            'username' => "user_{$i}",
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+        ])->assertCreated();
+    }
+
+    $this->postJson('/api/register', [
+        'username' => 'user_11',
+        'password' => 'password123',
+        'password_confirmation' => 'password123',
+    ])
+        ->assertTooManyRequests()
+        ->assertJsonPath('message', 'しばらく時間をおいてお試しください')
+        ->assertHeader('Retry-After');
+
+    expect(User::count())->toBe(10);
+});
+
 test('username and password are required', function () {
     $this->postJson('/api/register', [])
         ->assertUnprocessable()

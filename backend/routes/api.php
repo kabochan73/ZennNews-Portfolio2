@@ -11,7 +11,7 @@ use App\Http\Controllers\Api\TagArticleController;
 use App\Http\Controllers\Api\TagController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/register', RegisterController::class);
+Route::post('/register', RegisterController::class)->middleware('throttle:register');
 Route::post('/login', LoginController::class);
 
 Route::middleware('auth:sanctum')->group(function () {
