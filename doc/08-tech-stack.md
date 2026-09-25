@@ -17,6 +17,7 @@
 | テスト | Pest | 5 | |
 | コード整形 | Laravel Pint | 1 | |
 | 静的解析 | Larastan | 3 | |
+| AI 開発支援 | Laravel Boost | 2 | AI エージェント向けのガイドライン・スキル・MCP サーバー。MCP はプロジェクト直下の `.mcp.json` から Docker 経由で起動する |
 
 ## フロントエンド
 
