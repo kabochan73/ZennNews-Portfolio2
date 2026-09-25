@@ -25,7 +25,7 @@
 | 2. 記事の取得 ✅ | 取得コマンド、100件を超えた分の削除 ＋ Pest | ローカルでコマンドを実行すると記事が保存される |
 | 3. 認証 API ✅ | 新規登録、ログイン、ログアウト、`/me`、退会 ＋ Pest | API 1〜5 のテストが通る |
 | 4. 機能 API ✅ | タグ、記事一覧、ブックマーク、既読 ＋ Pest | API 6〜13 のテストが通る |
-| 5. フロントの基盤 | Route Handler での中継と Cookie、`proxy.ts`、TanStack Query、ヘッダー、下のタブ、フッター、トースト | 新規登録・ログインして `/home` が開け、未ログインでは `/login` に移動する |
+| 5. フロントの基盤 | **最初に ISR に合わせたバックエンドの変更**（記事一覧・全タグの API をログイン不要に、`GET /api/me/home` の追加、`GET /api/bookmarks` の削除、取得後の通知）。その後、Route Handler での中継と Cookie、`proxy.ts`、TanStack Query、ヘッダー、下のタブ、フッター、トースト | 新規登録・ログインして `/home` が開け、未ログインでは `/login` に移動する |
 | 6. 画面 | トップ → 新規登録・ログイン → タグ設定 → ホーム → エラー画面 ＋ Vitest | すべての画面が動く |
 | 7. E2E と CI | Playwright、GitHub Actions（Lint・Pest・Vitest・Playwright） | CI がすべて通る |
 | 8. デプロイと仕上げ | 本番用 Dockerfile、Railway（frontend / backend / cron / PostgreSQL 17）、環境変数、Wait for CI、README（ポートフォリオ用の説明） | 本番で一通り使える。push で自動デプロイされる |
