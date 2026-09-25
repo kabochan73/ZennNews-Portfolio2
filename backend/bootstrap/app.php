@@ -13,7 +13,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // There is no Laravel login page (the frontend is Next.js), so unauthenticated
+        // requests are never redirected; API routes answer 401 JSON instead.
+        $middleware->redirectGuestsTo(null);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
