@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\FavoriteTagController;
+use App\Http\Controllers\Api\TagArticleController;
 use App\Http\Controllers\Api\TagController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,4 +21,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/me/tags', [FavoriteTagController::class, 'update']);
 
     Route::get('/tags', [TagController::class, 'index']);
+    Route::get('/tags/{tag:slug}/articles', TagArticleController::class);
 });

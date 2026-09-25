@@ -3,12 +3,19 @@
 namespace App\Models;
 
 use App\Enums\ArticleType;
+use Carbon\CarbonImmutable;
 use Database\Factories\ArticleFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+/**
+ * @property ArticleType $article_type
+ * @property CarbonImmutable $published_at
+ * @property-read bool|null $is_read Loaded with withExists() for the current user
+ * @property-read bool|null $is_bookmarked Loaded with withExists() for the current user
+ */
 #[Fillable([
     'zenn_id',
     'title',
@@ -33,6 +40,16 @@ class Article extends Model
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class);
+    }
+
+    /**
+     * Users who have read this article.
+     *
+     * @return BelongsToMany<User, $this>
+     */
+    public function readBy(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'article_reads');
     }
 
     /**
