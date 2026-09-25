@@ -18,6 +18,14 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory;
 
     /**
+     * Find a user by username, ignoring case.
+     */
+    public static function findByUsername(string $username): ?self
+    {
+        return self::whereRaw('lower(username) = ?', [mb_strtolower($username)])->first();
+    }
+
+    /**
      * Favorite tags, in tag bar order.
      *
      * @return BelongsToMany<Tag, $this>
