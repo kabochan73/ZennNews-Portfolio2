@@ -30,6 +30,19 @@ docker compose down    # 停止
 | バックエンド（Laravel） | http://localhost:8000 |
 | DB（PostgreSQL 17） | localhost:5432（user: `zennnews` / password: `secret`） |
 
+### テスト
+
+```bash
+docker compose exec backend ./vendor/bin/pest
+```
+
+テストは開発用 DB（`zennnews`）とは別の `zennnews_test` を使う。`zennnews_test` は DB コンテナの初回作成時に `docker/postgres/init.sql` で自動作成される。
+それ以前に DB コンテナを作っていた場合は、一度だけ手動で作成する：
+
+```bash
+docker compose exec db psql -U zennnews -d postgres -c "CREATE DATABASE zennnews_test OWNER zennnews"
+```
+
 ### Lint・フォーマット
 
 ```bash
