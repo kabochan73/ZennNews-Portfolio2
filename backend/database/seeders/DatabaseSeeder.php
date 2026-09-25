@@ -15,6 +15,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call(TagSeeder::class);
+
         // Local development account (password: "password").
         User::factory()->create([
             'username' => 'test_user',
