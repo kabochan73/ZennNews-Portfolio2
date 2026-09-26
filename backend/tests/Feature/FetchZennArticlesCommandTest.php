@@ -14,7 +14,14 @@ beforeEach(function () {
     Tag::factory()->create(['slug' => 'laravel', 'fetch_hour' => 3, 'sort_order' => 3]);
 
     // Each topic returns one article whose zenn_id is unique per topic; "broken" returns 404.
+    // The frontend's revalidate endpoint fails only for "nextjs".
     Http::fake(function (Request $request) {
+        if (str_ends_with($request->url(), '/api/revalidate')) {
+            return $request['slug'] === 'nextjs'
+                ? Http::response([], 500)
+                : Http::response(['revalidated' => true]);
+        }
+
         if ($request['topicname'] === 'broken') {
             return Http::response([], 404);
         }
@@ -39,6 +46,7 @@ beforeEach(function () {
 function requestedTopics(): array
 {
     return Http::recorded()
+        ->filter(fn (array $pair): bool => str_contains($pair[0]->url(), 'zenn.dev'))
         ->map(fn (array $pair): string => $pair[0]['topicname'])
         ->values()
         ->all();
@@ -105,4 +113,44 @@ test('a failing tag is skipped and the command reports failure', function () {
         ->assertFailed();
 
     expect(Article::count())->toBe(1);
+});
+
+/**
+ * @return list<string>
+ */
+function revalidatedSlugs(): array
+{
+    return Http::recorded()
+        ->filter(fn (array $pair): bool => str_ends_with($pair[0]->url(), '/api/revalidate'))
+        ->map(fn (array $pair): string => $pair[0]['slug'])
+        ->values()
+        ->all();
+}
+
+test('each successfully saved tag is sent to the frontend for revalidation', function () {
+    config(['services.frontend.url' => 'http://frontend.test', 'services.frontend.revalidate_secret' => 'secret']);
+    Tag::factory()->create(['slug' => 'broken', 'fetch_hour' => 4, 'sort_order' => 0]);
+
+    $this->artisan('zenn:fetch-articles', ['--tag' => ['broken', 'react', 'laravel']])->assertFailed();
+
+    expect(revalidatedSlugs())->toBe(['react', 'laravel']);
+});
+
+test('a failed revalidation is reported but does not fail the command', function () {
+    config(['services.frontend.url' => 'http://frontend.test', 'services.frontend.revalidate_secret' => 'secret']);
+
+    $this->artisan('zenn:fetch-articles', ['--tag' => ['nextjs', 'react']])
+        ->expectsOutputToContain('nextjs: キャッシュの更新通知に失敗しました')
+        ->doesntExpectOutputToContain('react: キャッシュの更新通知に失敗しました')
+        ->assertSuccessful();
+
+    expect(Article::count())->toBe(2);
+});
+
+test('nothing is sent to the frontend when it is not configured', function () {
+    $this->artisan('zenn:fetch-articles', ['--tag' => ['react']])
+        ->doesntExpectOutputToContain('キャッシュの更新通知に失敗しました')
+        ->assertSuccessful();
+
+    expect(revalidatedSlugs())->toBe([]);
 });

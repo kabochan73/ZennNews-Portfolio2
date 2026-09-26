@@ -30,6 +30,9 @@
         <server name="DB_CONNECTION" value="pgsql" force="true"/>
         <server name="DB_DATABASE" value="zennnews_test" force="true"/>
         <server name="DB_URL" value="" force="true"/>
+        <!-- Never notify a real frontend from tests; tests that need it set the config explicitly. -->
+        <env name="FRONTEND_URL" value="" force="true"/>
+        <server name="FRONTEND_URL" value="" force="true"/>
         <env name="MAIL_MAILER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>

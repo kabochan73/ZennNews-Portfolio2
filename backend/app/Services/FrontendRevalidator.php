@@ -23,17 +23,14 @@ class FrontendRevalidator
      */
     public function revalidate(string $slug): bool
     {
-        $url = config('services.frontend.url');
-        $secret = config('services.frontend.revalidate_secret');
-
-        if (blank($url) || blank($secret)) {
+        if (! $this->isEnabled()) {
             return false;
         }
 
         try {
-            Http::baseUrl($url)
+            Http::baseUrl(config('services.frontend.url'))
                 ->timeout(self::TIMEOUT_SECONDS)
-                ->withHeaders(['X-Revalidate-Secret' => $secret])
+                ->withHeaders(['X-Revalidate-Secret' => config('services.frontend.revalidate_secret')])
                 ->acceptJson()
                 ->post('/api/revalidate', ['slug' => $slug])
                 ->throw();
@@ -47,5 +44,13 @@ class FrontendRevalidator
 
             return false;
         }
+    }
+
+    /**
+     * Whether the frontend URL and the shared secret are both configured.
+     */
+    public function isEnabled(): bool
+    {
+        return filled(config('services.frontend.url')) && filled(config('services.frontend.revalidate_secret'));
     }
 }

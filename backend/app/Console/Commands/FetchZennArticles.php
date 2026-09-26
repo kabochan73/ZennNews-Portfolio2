@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Tag;
 use App\Services\ArticleImporter;
+use App\Services\FrontendRevalidator;
 use App\Services\Zenn\ZennClient;
 use Carbon\CarbonImmutable;
 use Illuminate\Console\Attributes\Description;
@@ -28,7 +29,7 @@ class FetchZennArticles extends Command
     /**
      * Execute the console command.
      */
-    public function handle(ZennClient $client, ArticleImporter $importer): int
+    public function handle(ZennClient $client, ArticleImporter $importer, FrontendRevalidator $revalidator): int
     {
         $tags = $this->resolveTags();
 
@@ -59,6 +60,11 @@ class FetchZennArticles extends Command
                     $result['unlinked'],
                     $result['deleted'],
                 ));
+
+                // The articles are saved either way; the frontend also rebuilds every 8 hours.
+                if ($revalidator->isEnabled() && ! $revalidator->revalidate($tag->slug)) {
+                    $this->warn("{$tag->slug}: キャッシュの更新通知に失敗しました");
+                }
             } catch (Throwable $e) {
                 // Log it and move on; the tag is fetched again the next day.
                 report($e);
