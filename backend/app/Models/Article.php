@@ -13,8 +13,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 /**
  * @property ArticleType $article_type
  * @property CarbonImmutable $published_at
- * @property-read bool|null $is_read Loaded with withExists() for the current user
- * @property-read bool|null $is_bookmarked Loaded with withExists() for the current user
  */
 #[Fillable([
     'zenn_id',

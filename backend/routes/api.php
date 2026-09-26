@@ -17,6 +17,7 @@ Route::post('/login', LoginController::class);
 // Shared data used by Next.js to build cached (ISR) pages; no login needed.
 Route::middleware('throttle:public-api')->group(function () {
     Route::get('/tags', [TagController::class, 'index']);
+    Route::get('/tags/{tag:slug}/articles', TagArticleController::class);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -26,8 +27,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/me', [AccountController::class, 'destroy']);
     Route::get('/me/tags', [FavoriteTagController::class, 'index']);
     Route::put('/me/tags', [FavoriteTagController::class, 'update']);
-
-    Route::get('/tags/{tag:slug}/articles', TagArticleController::class);
 
     Route::post('/articles/{article}/read', ArticleReadController::class);
     Route::put('/articles/{article}/bookmark', [BookmarkController::class, 'store']);

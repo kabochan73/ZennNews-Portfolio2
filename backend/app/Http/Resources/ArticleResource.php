@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * Expects is_read / is_bookmarked to be loaded with withExists() for the current user.
+ * The article shape shared by every user; read / bookmark state is not included.
  *
  * @mixin Article
  */
@@ -32,8 +32,6 @@ class ArticleResource extends JsonResource
                 'avatar_url' => $this->author_avatar_url,
             ],
             'published_at' => $this->published_at->timezone('Asia/Tokyo')->toIso8601String(),
-            'is_read' => (bool) $this->is_read,
-            'is_bookmarked' => (bool) $this->is_bookmarked,
         ];
     }
 }
