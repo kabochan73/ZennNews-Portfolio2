@@ -11,8 +11,12 @@ import type { ReactNode } from "react";
 import { ToastProvider } from "@/components/ui/Toast";
 import { ApiClientError } from "@/lib/api-client";
 
-/** Articles change once a day, so cached data counts as fresh for a while. */
-const STALE_TIME_MS = 5 * 60 * 1000;
+/**
+ * The cached user state (reads, bookmarks, favorite tags) only changes through this
+ * user's own actions, which update the cache directly, so it never goes stale by
+ * itself. A page reload fetches it again (e.g. to pick up reads from another device).
+ */
+const STALE_TIME_MS = Infinity;
 
 /**
  * The login expired or was revoked: send the user to log in again.
