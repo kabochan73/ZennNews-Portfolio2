@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\BookmarkController;
 use App\Http\Controllers\Api\FavoriteTagController;
+use App\Http\Controllers\Api\MyHomeController;
 use App\Http\Controllers\Api\TagArticleController;
 use App\Http\Controllers\Api\TagController;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/me', [AccountController::class, 'destroy']);
     Route::get('/me/tags', [FavoriteTagController::class, 'index']);
     Route::put('/me/tags', [FavoriteTagController::class, 'update']);
+    Route::get('/me/home', MyHomeController::class);
 
     Route::post('/articles/{article}/read', ArticleReadController::class);
     Route::put('/articles/{article}/bookmark', [BookmarkController::class, 'store']);
