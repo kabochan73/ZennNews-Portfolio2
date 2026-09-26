@@ -47,6 +47,9 @@ services:
       - ./frontend:/app
       - /app/node_modules
       - /app/.next
+    environment:
+      LARAVEL_API_URL: http://backend:8000
+      REVALIDATE_SECRET: local-revalidate-secret
     depends_on:
       - backend
 
