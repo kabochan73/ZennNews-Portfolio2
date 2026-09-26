@@ -16,6 +16,12 @@ return Application::configure(basePath: dirname(__DIR__))
         // There is no Laravel login page (the frontend is Next.js), so unauthenticated
         // requests are never redirected; API routes answer 401 JSON instead.
         $middleware->redirectGuestsTo(null);
+
+        // Every request comes through the Next.js server, which forwards the visitor's
+        // IP in X-Forwarded-For; trust it so per-IP rate limits apply per visitor.
+        // Requires that Laravel is NOT reachable from the internet (private network
+        // only), otherwise anyone could forge X-Forwarded-For.
+        $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

@@ -102,6 +102,22 @@ test('sign-ups are limited to 10 per minute per IP address', function () {
     expect(User::count())->toBe(10);
 });
 
+test('the sign-up limit is counted per visitor IP forwarded by Next.js', function () {
+    $register = fn (string $ip, int $i) => $this->withHeader('X-Forwarded-For', $ip)
+        ->postJson('/api/register', [
+            'username' => 'user_'.str_replace('.', '_', $ip)."_{$i}",
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+        ]);
+
+    foreach (range(1, 10) as $i) {
+        $register('203.0.113.1', $i)->assertCreated();
+    }
+
+    $register('203.0.113.1', 11)->assertTooManyRequests();
+    $register('203.0.113.2', 1)->assertCreated();
+});
+
 test('username and password are required', function () {
     $this->postJson('/api/register', [])
         ->assertUnprocessable()
