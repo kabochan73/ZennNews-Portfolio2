@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', RegisterController::class)->middleware('throttle:register');
 Route::post('/login', LoginController::class);
 
+// Shared data used by Next.js to build cached (ISR) pages; no login needed.
+Route::middleware('throttle:public-api')->group(function () {
+    Route::get('/tags', [TagController::class, 'index']);
+});
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', LogoutController::class);
 
@@ -22,7 +27,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me/tags', [FavoriteTagController::class, 'index']);
     Route::put('/me/tags', [FavoriteTagController::class, 'update']);
 
-    Route::get('/tags', [TagController::class, 'index']);
     Route::get('/tags/{tag:slug}/articles', TagArticleController::class);
 
     Route::post('/articles/{article}/read', ArticleReadController::class);
