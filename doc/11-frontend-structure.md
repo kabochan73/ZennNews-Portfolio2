@@ -12,9 +12,11 @@ frontend/
 │   │   ├── globals.css
 │   │   ├── not-found.tsx                  404 ページ
 │   │   ├── error.tsx                      エラー（500）ページ
-│   │   ├── page.tsx                       トップ          /
-│   │   ├── login/page.tsx                 ログイン        /login
-│   │   ├── register/page.tsx              新規登録        /register
+│   │   ├── (public)/                      … 誰でも見られる画面（ルートグループ：URL には含まれない）
+│   │   │   └── page.tsx                   トップ          /
+│   │   ├── (auth)/                        … ログイン・新規登録（ルートグループ）
+│   │   │   ├── login/page.tsx             ログイン        /login
+│   │   │   └── register/page.tsx          新規登録        /register
 │   │   ├── home/                          … ログインが必要な画面
 │   │   │   ├── layout.tsx                 ヘッダー ＋ 下のタブ（HOME / TAGS）
 │   │   │   ├── page.tsx                   入り口          /home（一番左のお気に入りタグへ移動）
@@ -52,7 +54,8 @@ frontend/
 |---|---|
 | フォルダの分け方 | 種類ごと（`components/`・`hooks/`・`lib/`）。`components/` の中は画面ごとに分ける |
 | 呼び方の統一 | 「フィード」ではなく「home」に統一する（`/home`、`components/home/`、`HomeTabs`） |
-| ログインが必要な画面 | `home/` の下にまとめる。ルートグループは使わない。`home/layout.tsx` 1つで、共通レイアウト（ヘッダーと下のタブ）を作る |
+| ルートグループ | トップは `(public)/`、ログイン・新規登録は `(auth)/` に分ける。フォルダを見やすくするためだけなので、グループ用の layout は作らない（URL も変わらない） |
+| ログインが必要な画面 | `home/` の下にまとめる（URL に `/home` を付けるため、ルートグループではなく普通のフォルダ）。`home/layout.tsx` 1つで、共通レイアウト（ヘッダーと下のタブ）を作る |
 | ログインの確認 | `proxy.ts`（Next.js 16 で `middleware.ts` から名前が変わったもの）で、`/home` から始まる URL は Cookie がなければ `/login` へ移動させる |
 | ヘッダー | 未ログイン用の `PublicHeader`（ログイン・新規登録ボタン）と、ログイン後用の `AppHeader`（ユーザー名。PC では HOME / TAGS のリンク） |
 | 下のタブ | `BottomNav`。スマホ（1024px 未満）だけに表示する |

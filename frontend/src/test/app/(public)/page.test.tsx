@@ -1,7 +1,7 @@
 import { render, screen, within } from "@testing-library/react";
 import { expect, test } from "vitest";
 
-import TopPage from "@/app/page";
+import TopPage from "@/app/(public)/page";
 
 test("shows the hero, the four features and the comparison with Zenn", () => {
   render(<TopPage />);
