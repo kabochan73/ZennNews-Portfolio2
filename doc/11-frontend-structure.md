@@ -66,7 +66,7 @@ frontend/
 | `/`・`/login`・`/register` | SSG（ビルド時に作る） | 誰が見ても同じ内容 |
 | `/home` | SSG の枠 ＋ ブラウザで処理 | ブラウザで `GET /api/me/home` を取得し、一番左のお気に入りタグ（`/home/nextjs` など）へ移動する。0個なら `/home/tags?welcome=1` へ |
 | `/home/[slug]` | **ISR** | 記事一覧は全員共通なので、タグごとにキャッシュする。既読・ブックマークはブラウザで取得して組み合わせる |
-| `/home/tags` | ISR（全タグの一覧） ＋ ブラウザで処理 | 全タグの一覧は全員共通なのでキャッシュする。お気に入りはブラウザで取得する |
+| `/home/tags` | リクエストごとに作る（`connection()`） ＋ ブラウザで処理 | 固定の URL なので、SSG / ISR にするとビルドのときに Laravel を呼んでしまう（ビルド中は Laravel が動いていないため失敗する）。ページは毎回作るが、全タグの一覧は Next.js のデータキャッシュ（1日）から取るので、Laravel へのアクセスは1日1回程度。お気に入りはブラウザで取得する |
 | `not-found` | SSG | 固定の内容 |
 
 ### なぜ `/home/[slug]` を ISR にしたか
@@ -126,7 +126,7 @@ ISR のページは、全員に同じ HTML を配るために1回だけ作って
 | `home/layout.tsx` | SC | Cookie を読まない。ヘッダーと下のタブを並べるだけ |
 | `home/page.tsx`（入り口） | SC | 中で移動処理用の小さな CC を表示する |
 | `home/[slug]/page.tsx` | SC（ISR） | サーバーで記事一覧（`GET /api/tags/{slug}/articles`）を取得し、TanStack Query のキャッシュとして CC に渡す（HydrationBoundary） |
-| `home/tags/page.tsx` | SC（ISR） | サーバーで全タグの一覧を取得して CC に渡す |
+| `home/tags/page.tsx` | SC（リクエストごと） | `connection()` の後に全タグの一覧（1日キャッシュ）を取得して CC に渡す |
 | `not-found.tsx` | SC | 固定の内容 |
 | `error.tsx` | **CC** | Next.js の決まりで、エラー画面は CC にする |
 | `components/layout/PublicHeader`・`Footer` | SC | リンクと文字だけ |
