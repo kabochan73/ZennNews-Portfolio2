@@ -44,7 +44,8 @@ docker compose exec backend php artisan zenn:fetch-articles                  # �
 ### テスト
 
 ```bash
-docker compose exec backend ./vendor/bin/pest
+docker compose exec backend ./vendor/bin/pest   # バックエンド（Pest）
+docker compose exec frontend npm test           # フロントエンド（Vitest）
 ```
 
 テストは開発用 DB（`zennnews`）とは別の `zennnews_test` を使う。`zennnews_test` は DB コンテナの初回作成時に `docker/postgres/init.sql` で自動作成される。
