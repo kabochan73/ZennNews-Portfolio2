@@ -40,7 +40,7 @@ frontend/
 │   │   ├── schemas.ts                     Zod のスキーマ（ログイン、新規登録）
 │   │   └── format.ts                      日時の表示（9/23 14:05）
 │   ├── types/api.ts                       User、Tag、Article の型（API 設計書と一致させる）
-│   └── test/                              Vitest の設定、MSW の偽 API
+│   └── test/                              Vitest のテスト。src/ と同じフォルダ構成で置く（例：src/lib/laravel.ts → src/test/lib/laravel.test.ts）。setup.ts もここ
 └── e2e/                                   Playwright の E2E テスト
 ```
 
