@@ -1,4 +1,5 @@
 import { clearAuthToken, getAuthToken } from "@/lib/auth-cookie";
+import { getClientIp } from "@/lib/client-ip";
 import { laravelFetch } from "@/lib/laravel";
 import { forwardLaravelResponse } from "@/lib/laravel-response";
 
@@ -20,6 +21,7 @@ async function proxy(request: Request, { params }: Context): Promise<Response> {
       method: request.method,
       body: body === "" ? undefined : body,
       token: await getAuthToken(),
+      clientIp: getClientIp(request.headers),
     },
   );
 

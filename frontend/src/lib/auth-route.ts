@@ -1,6 +1,7 @@
 import "server-only";
 
 import { setAuthToken } from "@/lib/auth-cookie";
+import { getClientIp } from "@/lib/client-ip";
 import { laravelFetch } from "@/lib/laravel";
 import { laravelErrorResponse } from "@/lib/laravel-response";
 import type { User } from "@/types/api";
@@ -21,6 +22,7 @@ export async function handleAuthRequest(
   const response = await laravelFetch(laravelPath, {
     method: "POST",
     body: await request.text(),
+    clientIp: getClientIp(request.headers),
   });
 
   if (!response.ok) {

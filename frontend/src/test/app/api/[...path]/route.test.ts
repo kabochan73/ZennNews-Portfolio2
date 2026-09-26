@@ -140,3 +140,17 @@ test("sends no Authorization header without a cookie", async () => {
 
   expect(lastRequest()[1].headers.Authorization).toBeUndefined();
 });
+
+test("forwards the visitor IP (right-most X-Forwarded-For) to Laravel", async () => {
+  fetchMock.mockResolvedValue(new Response(null, { status: 204 }));
+
+  await POST(
+    new Request("http://localhost/api/articles/12/read", {
+      method: "POST",
+      headers: { "X-Forwarded-For": "1.2.3.4, 203.0.113.1" },
+    }),
+    context("articles", "12", "read"),
+  );
+
+  expect(lastRequest()[1].headers["X-Forwarded-For"]).toBe("203.0.113.1");
+});

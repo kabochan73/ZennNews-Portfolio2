@@ -19,6 +19,8 @@ type LaravelFetchOptions = {
   body?: string;
   /** Sanctum token of the user, sent as a Bearer token. */
   token?: string;
+  /** Visitor IP, sent as X-Forwarded-For so Laravel rate-limits per visitor. */
+  clientIp?: string;
   next?: NextFetchRequestConfig;
 };
 
@@ -28,7 +30,7 @@ type LaravelFetchOptions = {
  */
 export async function laravelFetch(
   path: string,
-  { method = "GET", body, token, next }: LaravelFetchOptions = {},
+  { method = "GET", body, token, clientIp, next }: LaravelFetchOptions = {},
 ): Promise<Response> {
   const baseUrl = process.env.LARAVEL_API_URL;
   if (!baseUrl) {
@@ -41,6 +43,9 @@ export async function laravelFetch(
   }
   if (token) {
     headers.Authorization = `Bearer ${token}`;
+  }
+  if (clientIp) {
+    headers["X-Forwarded-For"] = clientIp;
   }
 
   return fetch(`${baseUrl}/api${path}`, { method, headers, body, next });
