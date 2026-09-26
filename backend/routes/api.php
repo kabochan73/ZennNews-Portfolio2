@@ -25,7 +25,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/tags', [TagController::class, 'index']);
     Route::get('/tags/{tag:slug}/articles', TagArticleController::class);
 
-    Route::get('/bookmarks', [BookmarkController::class, 'index']);
     Route::post('/articles/{article}/read', ArticleReadController::class);
     Route::put('/articles/{article}/bookmark', [BookmarkController::class, 'store']);
     Route::delete('/articles/{article}/bookmark', [BookmarkController::class, 'destroy']);

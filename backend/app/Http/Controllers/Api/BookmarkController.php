@@ -3,11 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ArticleResource;
 use App\Models\Article;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -15,25 +12,6 @@ use Illuminate\Support\Facades\DB;
 class BookmarkController extends Controller
 {
     public const MAX_BOOKMARKS = 100;
-
-    /**
-     * All bookmarks, newest bookmark first, including articles no longer in any tag
-     * (GET /api/bookmarks).
-     */
-    public function index(Request $request): JsonResponse
-    {
-        /** @var User $user */
-        $user = $request->user();
-
-        $articles = $user->bookmarkedArticles()
-            ->withExists([
-                'readBy as is_read' => fn (Builder $query) => $query->whereKey($user->id),
-                'bookmarkedBy as is_bookmarked' => fn (Builder $query) => $query->whereKey($user->id),
-            ])
-            ->get();
-
-        return response()->json(['articles' => ArticleResource::collection($articles)]);
-    }
 
     /**
      * Bookmark an article (PUT /api/articles/{id}/bookmark). Up to 100 per user.
