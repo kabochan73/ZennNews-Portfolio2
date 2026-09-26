@@ -40,4 +40,10 @@ return [
         'timeout' => (int) env('ZENN_API_TIMEOUT', 10),
     ],
 
+    // Next.js frontend, notified to rebuild a tag's cached (ISR) page after articles are fetched.
+    'frontend' => [
+        'url' => env('FRONTEND_URL'),
+        'revalidate_secret' => env('REVALIDATE_SECRET'),
+    ],
+
 ];
