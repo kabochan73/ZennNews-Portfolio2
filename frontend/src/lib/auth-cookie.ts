@@ -2,29 +2,45 @@ import "server-only";
 
 import { cookies } from "next/headers";
 
-/** HttpOnly cookie holding the Sanctum token; JavaScript in the browser can't read it. */
-export const AUTH_COOKIE_NAME = "zennnews_token";
+import { AUTH_COOKIE_NAME, LOGGED_IN_COOKIE_NAME } from "@/lib/cookie-names";
+
+export { AUTH_COOKIE_NAME } from "@/lib/cookie-names";
 
 /** Same lifetime as the Sanctum token (1 year). */
 const ONE_YEAR_SECONDS = 60 * 60 * 24 * 365;
+
+const COOKIE_OPTIONS = {
+  // Local development runs on plain HTTP, so Secure is enabled only in production.
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax",
+  path: "/",
+  maxAge: ONE_YEAR_SECONDS,
+} as const;
 
 export async function getAuthToken(): Promise<string | undefined> {
   return (await cookies()).get(AUTH_COOKIE_NAME)?.value;
 }
 
-/** Only callable in Route Handlers and Server Functions. */
+/**
+ * Store the token (HttpOnly; JavaScript can't read it) together with the
+ * logged-in hint cookie used by static pages. Only callable in Route Handlers
+ * and Server Functions.
+ */
 export async function setAuthToken(token: string): Promise<void> {
-  (await cookies()).set(AUTH_COOKIE_NAME, token, {
+  const cookieStore = await cookies();
+  cookieStore.set(AUTH_COOKIE_NAME, token, {
+    ...COOKIE_OPTIONS,
     httpOnly: true,
-    // Local development runs on plain HTTP, so Secure is enabled only in production.
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge: ONE_YEAR_SECONDS,
+  });
+  cookieStore.set(LOGGED_IN_COOKIE_NAME, "1", {
+    ...COOKIE_OPTIONS,
+    httpOnly: false,
   });
 }
 
-/** Only callable in Route Handlers and Server Functions. */
+/** Remove the token and the hint together. Only callable in Route Handlers and Server Functions. */
 export async function clearAuthToken(): Promise<void> {
-  (await cookies()).delete(AUTH_COOKIE_NAME);
+  const cookieStore = await cookies();
+  cookieStore.delete(AUTH_COOKIE_NAME);
+  cookieStore.delete(LOGGED_IN_COOKIE_NAME);
 }

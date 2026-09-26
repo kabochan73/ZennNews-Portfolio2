@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 import { POST as login } from "@/app/api/auth/login/route";
 import { POST as register } from "@/app/api/auth/register/route";
-import { AUTH_COOKIE_NAME } from "@/lib/auth-cookie";
+import { AUTH_COOKIE_NAME, LOGGED_IN_COOKIE_NAME } from "@/lib/cookie-names";
 
 const cookieStore = { set: vi.fn(), get: vi.fn(), delete: vi.fn() };
 
@@ -32,7 +32,7 @@ function jsonRequest(body: unknown): Request {
 }
 
 describe("login", () => {
-  test("stores the token in the cookie and returns only the user", async () => {
+  test("stores the token and the logged-in hint, and returns only the user", async () => {
     fetchMock.mockResolvedValue(Response.json({ user, token: "1|secret" }));
 
     const response = await login(
@@ -45,6 +45,12 @@ describe("login", () => {
       AUTH_COOKIE_NAME,
       "1|secret",
       expect.objectContaining({ httpOnly: true, sameSite: "lax", path: "/" }),
+    );
+    // The hint is readable by JavaScript and holds no token.
+    expect(cookieStore.set).toHaveBeenCalledWith(
+      LOGGED_IN_COOKIE_NAME,
+      "1",
+      expect.objectContaining({ httpOnly: false, sameSite: "lax", path: "/" }),
     );
 
     const [url, init] = fetchMock.mock.calls[0];
