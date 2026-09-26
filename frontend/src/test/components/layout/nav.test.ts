@@ -8,6 +8,8 @@ describe("activeNavHref", () => {
     ["/home/nextjs", "/home"],
     ["/home/react", "/home"],
     ["/home/tags", "/home/tags"],
+    ["/", null],
+    ["/homepage", null],
   ])("%s -> %s", (pathname, expected) => {
     expect(activeNavHref(pathname)).toBe(expected);
   });

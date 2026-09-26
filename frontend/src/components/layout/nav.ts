@@ -6,9 +6,16 @@ export const NAV_ITEMS = [
 
 export type NavHref = (typeof NAV_ITEMS)[number]["href"];
 
-/** TAGS on the tag settings page; HOME on /home and every /home/{slug}. */
-export function activeNavHref(pathname: string): NavHref {
-  return pathname === "/home/tags" ? "/home/tags" : "/home";
+/**
+ * TAGS on the tag settings page; HOME on /home and every /home/{slug};
+ * nothing outside /home (e.g. the top page for a logged-in user).
+ */
+export function activeNavHref(pathname: string): NavHref | null {
+  if (pathname === "/home/tags") {
+    return "/home/tags";
+  }
+
+  return pathname === "/home" || pathname.startsWith("/home/") ? "/home" : null;
 }
 
 /**
