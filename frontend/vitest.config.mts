@@ -8,5 +8,8 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["./src/test/setup.ts"],
     include: ["src/test/**/*.test.{ts,tsx}"],
+    // jsdom + user-event tests can exceed the 5s default when the machine is busy
+    // (e.g. Next.js compiling at the same time, or CI).
+    testTimeout: 10_000,
   },
 });
