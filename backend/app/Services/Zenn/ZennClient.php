@@ -13,6 +13,12 @@ use Throwable;
 class ZennClient
 {
     /**
+     * Names this app and links to its repository, so Zenn can see who is calling
+     * and how to get in touch.
+     */
+    public const USER_AGENT = 'ZennNews/1.0 (+https://github.com/kabochan73/ZennNews-Portfolio3)';
+
+    /**
      * Fetch the latest articles for a topic, newest first.
      *
      * Connection errors and 5xx responses are retried twice (1 second apart);
@@ -28,7 +34,7 @@ class ZennClient
     {
         $articles = Http::baseUrl(config('services.zenn.base_url'))
             ->timeout(config('services.zenn.timeout'))
-            ->withUserAgent('ZennNews/1.0 (unofficial reader)')
+            ->withUserAgent(self::USER_AGENT)
             ->acceptJson()
             ->retry(3, 1000, fn (Throwable $e): bool => $this->shouldRetry($e))
             ->get('/articles', [

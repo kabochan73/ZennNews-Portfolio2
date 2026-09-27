@@ -7,6 +7,7 @@
 | 項目 | 仕様 |
 |---|---|
 | 取得元 | Zenn 非公式 API `GET https://zenn.dev/api/articles?topicname={slug}&order=latest&count=30` |
+| User-Agent | `ZennNews/1.0 (+https://github.com/kabochan73/ZennNews-Portfolio3)`。アクセス元と連絡先（GitHub リポジトリ）が Zenn 側から分かるようにする |
 | 頻度 | 各タグ1日1回 |
 | 取得件数 | 1回につき最新30件 |
 | 実行時間 | 日本時間の3時〜8時に1時間おき（6回）。1回最大7タグ、合計42タグ。タグを増やす場合は1時間あたりのタグ数を増やす |
