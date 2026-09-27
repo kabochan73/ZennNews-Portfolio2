@@ -43,7 +43,6 @@ frontend/
 │   │   └── format.ts                      日時の表示（9/23 14:05）
 │   ├── types/api.ts                       User、Tag、Article の型（API 設計書と一致させる）
 │   └── test/                              Vitest のテスト。src/ と同じフォルダ構成で置く（例：src/lib/laravel.ts → src/test/lib/laravel.test.ts）。setup.ts もここ
-└── e2e/                                   Playwright の E2E テスト
 ```
 
 - `/home/[slug]` と `/home/tags` は形が重なるが、Next.js では固定の URL（`tags`）が優先される。そのため **`tags` という slug のタグは追加できない**

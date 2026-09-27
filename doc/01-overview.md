@@ -44,5 +44,5 @@ NEW はニュースアプリの見出しのように眺め、気になった記�
 | 本番環境 | Railway（Dockerfile でデプロイ） |
 | 定期実行 | Railway Cron |
 | CI/CD | GitHub Actions ＋ Railway の自動デプロイ |
-| テスト | Pest / Vitest ＋ React Testing Library / Playwright |
+| テスト | Pest / Vitest ＋ React Testing Library |
 | データ取得元 | Zenn 非公式 API |

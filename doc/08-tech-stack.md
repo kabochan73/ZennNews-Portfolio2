@@ -43,7 +43,6 @@
 | バックエンド | Pest | 5 |
 | フロントエンド（コンポーネント） | Vitest ＋ React Testing Library | 5 / 16 |
 | API のモック | MSW | 最新 |
-| E2E | Playwright | 1.63 |
 
 ## DB・インフラ
 

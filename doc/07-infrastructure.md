@@ -25,7 +25,9 @@ Railway プロジェクト
 
 - GitHub のモノレポ（`frontend/` と `backend/` を1つのリポジトリに置く）
 - ブランチは切らず、`main` に直接 push する
-- push のたびに GitHub Actions でテストを実行する
+- push のたびに GitHub Actions（`.github/workflows/ci.yml`）で、次の2つのジョブを同時に実行する
+  - backend：Pint、Larastan、Pest（PostgreSQL 17 を CI のサービスとして起動）
+  - frontend：ESLint、Prettier、Vitest、ビルド（型チェックを含む。ビルド中は Laravel を呼ばない）
 - `main` のテストが通ったら、Railway が自動でデプロイする（Railway の「Wait for CI」を有効にし、テスト失敗時はデプロイしない）
 
 ## テスト
@@ -34,4 +36,5 @@ Railway プロジェクト
 |---|---|---|
 | バックエンド | Pest | API、記事の取得・削除処理、NEW / READ / BOOKMARK のルール、ブックマーク上限 |
 | フロントエンド | Vitest ＋ React Testing Library | タグバー、タブなどのコンポーネント |
-| E2E | Playwright | 新規登録 → タグ選択 → 記事を読む → ブックマーク の一連の流れ |
+
+E2E テスト（Playwright）は作らない。画面の流れは手動で確認し、問題が見つかったらその都度直す。
