@@ -11,7 +11,7 @@
 | 認証方式 | 独自ドメインを使わないため、Sanctum のトークン方式を使う。トークンは Next.js 側で HttpOnly Cookie に保持し、ブラウザの JavaScript から読めないようにする。トークン・Cookie ともに有効期限は1年 |
 | ログイン中の目印 Cookie | SSG のページ（トップ）で表示を切り替えるため、JavaScript から読める `zennnews_logged_in=1` を、トークンの Cookie と同時に作成・削除する。トークンは含まず、認証には使わない（表示のヒントのみ） |
 | 不正対策 | ログインの連続失敗を制限する（Laravel 標準）。通信は HTTPS（Railway 標準） |
-| 利用者の IP の受け渡し | ブラウザからの API はすべて Next.js が中継するため、Laravel から見ると全員が Next.js の IP になる。回数制限を利用者ごとに効かせるため、Next.js は受け取った `X-Forwarded-For` の一番右の値（Railway の入口が付けた本当の IP）を `X-Forwarded-For` として Laravel に送り、Laravel はそれを信用する（Trusted Proxies）。**本番では Laravel を外部に公開しない（Railway の内部ネットワークのみ）**。公開すると `X-Forwarded-For` を偽装できてしまうため。Railway の実際のヘッダーはフェーズ8で確認する |
+| 利用者の IP の受け渡し | ブラウザからの API はすべて Next.js が中継するため、Laravel から見ると全員が Next.js の IP になる。回数制限を利用者ごとに効かせるため、Next.js は利用者の IP を `X-Forwarded-For` として Laravel に送り、Laravel はそれを信用する（Trusted Proxies）。利用者の IP は、Railway の入口が付ける `X-Real-IP` を使う（利用者が送った値は入口で上書きされるので偽装できない）。`X-Forwarded-For` は「利用者, 入口のサーバー」の形で、入口のサーバーの IP はリクエストごとに変わるため使わない（2026-09-27 に本番で確認）。`X-Real-IP` がないローカルでは、`X-Forwarded-For` の一番右（Next.js が入れた接続元）を使う。**本番では Laravel を外部に公開しない（Railway の内部ネットワークのみ）**。公開すると `X-Forwarded-For` を偽装できてしまうため |
 | 表示速度 | 1タグ最大100件を一度に読み込む。一度表示したタグはキャッシュし、タグの切り替えを即時にする |
 | 外部 API への配慮 | Zenn へのアクセスは1日42回（1タグ1回）に抑える。記事は必ず Zenn の元ページへリンクし、出典を明記する |
 | 非公式であることの明記 | フッターに「本アプリは Zenn 公式とは関係ありません」と表示する。Zenn のロゴやそれに似たマークは使わない |
