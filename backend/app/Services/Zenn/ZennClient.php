@@ -16,7 +16,7 @@ class ZennClient
      * Names this app and links to its repository, so Zenn can see who is calling
      * and how to get in touch.
      */
-    public const USER_AGENT = 'ZennNews/1.0 (+https://github.com/kabochan73/ZennNews-Portfolio3)';
+    public const USER_AGENT = 'ZennNews/1.0 (+https://github.com/kabochan73/ZennNews-Portfolio2)';
 
     /**
      * Fetch the latest articles for a topic, newest first.

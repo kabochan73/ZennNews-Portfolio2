@@ -51,7 +51,7 @@ test('it identifies itself with the repository url in the user agent', function 
     (new ZennClient)->fetchLatestArticles('nextjs');
 
     Http::assertSent(fn (Request $request): bool => $request->header('User-Agent')
-        === ['ZennNews/1.0 (+https://github.com/kabochan73/ZennNews-Portfolio3)']);
+        === ['ZennNews/1.0 (+https://github.com/kabochan73/ZennNews-Portfolio2)']);
 });
 
 test('it maps api articles to ZennArticle objects', function () {
