@@ -2,7 +2,57 @@
 
 Zenn の記事を、お気に入りのタグごとに最新順で読めるニュースアプリ。
 
+**https://frontend-production-7916.up.railway.app**
+
 - 要件定義・設計：[doc/](doc/README.md)
+
+## 作った理由
+
+Zenn のトピックページはトレンド順が中心で、自分が追いかけたい技術の新着を順番に読みにくく、どこまで読んだかも分かりにくいと感じていました。そこで、お気に入りのタグをワンタップで切り替えながら、新しい順に読み、既読・未読がひと目で分かるアプリを作りました。
+
+## 主な機能
+
+- **お気に入りタグ**：42個のタグ（7カテゴリ）から選び、選んだ順にタグバーに並ぶ。タグの切り替えはワンタップ
+- **NEW / READ / BOOKMARK**：記事は新しい順。開いた記事は READ に移り、未読の記事だけを NEW で眺められる。開いた直後の記事は、タブを切り替えるまで NEW に薄く残す
+- **ブックマーク**：最大100件。タグから外れた古い記事も残る
+- **記事の自動取得**：毎朝3〜8時に、タグごとに最新30件を取得し、1タグ最大100件を保持する
+- ユーザー名とパスワードだけで登録できる（メールアドレス不要）。スマホと PC の両方に対応
+
+## 技術スタック
+
+| | |
+|---|---|
+| フロントエンド | Next.js 16（App Router）、React 19、TypeScript、Tailwind CSS 4、TanStack Query 5、React Hook Form ＋ Zod |
+| バックエンド | Laravel 13（PHP 8.4）、FrankenPHP、Laravel Sanctum |
+| DB | PostgreSQL 17 |
+| テスト・品質 | Pest、Vitest ＋ React Testing Library ＋ MSW、Larastan、Pint、ESLint、Prettier |
+| インフラ | Docker、Railway（frontend / backend / cron / PostgreSQL）、GitHub Actions |
+
+## 構成
+
+```
+ブラウザ
+   │  /home/{タグ}（ISR のページ）、/api/*（中継）
+   ▼
+Next.js（公開）── Sanctum トークンは HttpOnly Cookie に保存
+   │  Railway の内部ネットワーク
+   ▼
+Laravel API（非公開）──► PostgreSQL 17
+   ▲
+   │  記事の取得後に、Next.js へキャッシュの作り直しを通知
+cron（毎朝3〜8時）──► Zenn API
+```
+
+## 工夫した点
+
+- **タグを切り替えても Laravel へのアクセスは0回**：記事一覧は全員共通なので、タグごとのページを ISR でキャッシュする。既読・ブックマークなどのユーザーごとのデータは、ブラウザで最初に1回だけ取得して TanStack Query に置き、ブラウザ側で組み合わせる。「全員に同じもの」はサーバー、「その人だけのもの」はブラウザ、と分けた
+- **記事の更新はすぐ反映**：取得バッチがタグを1つ取り終えるたびに、Next.js の `/api/revalidate` に通知して、そのタグのページだけを作り直す（共有の秘密値で認証）。通知に失敗しても、8時間ごとに作り直す
+- **待たせない操作**：既読・ブックマークは楽観的更新で、画面をすぐ切り替える。失敗したときは、その記事の変更だけを元に戻す
+- **トークンを JavaScript から触らせない**：ブラウザは Next.js の Route Handler だけを呼び、Route Handler が HttpOnly Cookie のトークンを付けて Laravel に中継する
+- **レート制限を訪問者ごとに効かせる**：Laravel から見ると全員が Next.js の IP になるため、Railway の入口が付ける `X-Real-IP` を Next.js から渡す。本番で実際のヘッダーを確かめ、偽装できないことも確認した。Laravel は外部に公開しない
+- **Zenn への配慮**：アクセスするのは取得バッチだけで、1日42回に抑えている（下の「Zenn のデータの扱い」）
+- **CI/CD**：push すると GitHub Actions で Lint・静的解析・テスト・ビルドを実行し、通ったコミットだけを Railway がデプロイする（Wait for CI）。変更したサービスだけをデプロイする
+- **要件定義から設計・実装計画まで文書化**：[doc/](doc/README.md) に、画面・DB・API・インフラなどを分けてまとめた
 
 ## Zenn のデータの扱い
 
