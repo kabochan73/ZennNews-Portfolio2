@@ -48,7 +48,7 @@
 
 | 項目 | 採用技術 | 備考 |
 |---|---|---|
-| DB | PostgreSQL 17 | 開発環境は `postgres:17`、本番は Railway の `postgres-ssl:17`。Railway はデフォルトだと 16 になる可能性があるため、17 を明示的に指定する（サポート期限：2029年11月） |
+| DB | PostgreSQL 17 | 開発環境は `postgres:17`、本番は Railway の `postgres-ssl:17`。Railway 公式テンプレートの初期値は 18 だったため（2026-09 時点）、17 を明示的に指定した（サポート期限：2029年11月） |
 | コンテナ | Docker / docker compose | |
 | ホスティング | Railway | frontend / backend / cron / PostgreSQL |
 | CI | GitHub Actions | |

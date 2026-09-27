@@ -13,13 +13,72 @@ docker compose up
 
 ## 本番環境（Railway）
 
+URL：https://frontend-production-7916.up.railway.app
+
 ```
-Railway プロジェクト
- ├── frontend   … Next.js（frontend/Dockerfile）
- ├── backend    … Laravel（backend/Dockerfile）
- ├── cron       … backend と同じイメージで、記事取得コマンドのみ実行（0 18-23 * * * UTC）
- └── PostgreSQL … Railway が提供するもの（バージョン 17 を明示的に指定する）
+インターネット
+   │
+   ▼
+frontend（Next.js）… 公開はここだけ
+   │  内部ネットワーク（backend.railway.internal:8000）
+   ▼
+backend（Laravel）──► PostgreSQL 17
+   ▲                     ▲
+   │ 取得後の通知         │
+cron（毎日 3〜8 時）──────┘ ──► Zenn API
 ```
+
+- backend・cron・PostgreSQL には公開ドメインも TCP プロキシも付けない。Laravel は `X-Forwarded-For` を信用する設定なので、外から直接呼べると IP を偽装できてしまうため
+- 設定は Railway のダッシュボード（MCP）で行い、このページに記録する。`railway.json` は非推奨になっていて、新しく作ったサービスでは使えないため
+
+### サービスの設定
+
+| 項目 | frontend | backend | cron |
+|---|---|---|---|
+| ソース | GitHub `kabochan73/ZennNews-Portfolio2`（main） | 同じ | 同じ |
+| ルートディレクトリ | `/frontend` | `/backend` | `/backend` |
+| ビルド | `frontend/Dockerfile`（最後の `prod` ステージ） | `backend/Dockerfile`（最後の `prod` ステージ） | backend と同じ |
+| 起動コマンド | Dockerfile のまま（`node server.js`） | Dockerfile のまま（`php artisan optimize` → FrankenPHP） | `php artisan zenn:fetch-articles` |
+| デプロイ前のコマンド | なし | `/bin/sh -c "php artisan migrate --force && php artisan db:seed --class=TagSeeder --force"` | なし |
+| ヘルスチェック | `/` | `/up` | なし |
+| 監視するパス | `/frontend/**` | `/backend/**` | `/backend/**` |
+| cron | なし | なし | `0 18-23 * * *`（UTC。日本時間の3〜8時） |
+| 再起動 | 初期値 | 初期値 | `NEVER`（1回実行して終わるため） |
+| 公開ドメイン | あり | なし | なし |
+
+- Dockerfile を使うサービスでは、コマンドはシェルを通さずに実行される。`&&` を使うデプロイ前のコマンドは `/bin/sh -c` で包む
+- PostgreSQL は Railway 公式のテンプレートで作成した。テンプレートの初期値が 18 だったため、イメージを `ghcr.io/railwayapp-templates/postgres-ssl:17` に替え、空のボリュームを作り直した
+
+### 環境変数
+
+秘密の値（`APP_KEY`、`REVALIDATE_SECRET`）は backend にだけ置き、ほかのサービスは参照する。
+
+| サービス | 変数 | 値 |
+|---|---|---|
+| backend | `APP_KEY` | ランダムに生成した値 |
+| | `REVALIDATE_SECRET` | ランダムに生成した値 |
+| | `DB_CONNECTION` / `DB_URL` | `pgsql` / `${{Postgres.DATABASE_URL}}` |
+| | `PORT` | `8000` |
+| | `SESSION_DRIVER` | `array`（API だけなのでセッションは保存しない） |
+| | `FRONTEND_URL` | `http://${{frontend.RAILWAY_PRIVATE_DOMAIN}}:${{frontend.PORT}}` |
+| frontend | `LARAVEL_API_URL` | `http://${{backend.RAILWAY_PRIVATE_DOMAIN}}:${{backend.PORT}}` |
+| | `REVALIDATE_SECRET` | `${{backend.REVALIDATE_SECRET}}` |
+| | `PORT` | `3000` |
+| | `HOSTNAME` | `::`（下の「ネットワーク」を参照） |
+| cron | `APP_KEY` / `REVALIDATE_SECRET` | `${{backend.APP_KEY}}` / `${{backend.REVALIDATE_SECRET}}` |
+| | `DB_CONNECTION` / `DB_URL` | backend と同じ |
+| | `FRONTEND_URL` | backend と同じ |
+
+`APP_ENV=production`、`APP_DEBUG=false`、`LOG_CHANNEL=stderr` は `backend/Dockerfile` で設定している。
+
+### ネットワーク
+
+- Railway の入口は frontend に **IPv6** で接続してくる。Next.js を `0.0.0.0`（IPv4 だけ）で待ち受けるとつながらないため、`HOSTNAME=::` で IPv4 と IPv6 の両方を待ち受ける
+- 利用者の IP は、Railway の入口が付ける `X-Real-IP` を使う（詳しくは [非機能要件](06-non-functional.md)）
+
+### 運用メモ
+
+- 運用開始時（2026-09-27）に一度だけ、cron の起動コマンドを `php artisan zenn:fetch-articles --all` にして実行し、全タグの記事を取得した。その後、通常のコマンドと cron の時刻に戻した
 
 ## リポジトリ・CI/CD
 
@@ -28,7 +87,7 @@ Railway プロジェクト
 - push のたびに GitHub Actions（`.github/workflows/ci.yml`）で、次の2つのジョブを同時に実行する
   - backend：Pint、Larastan、Pest（PostgreSQL 17 を CI のサービスとして起動）
   - frontend：ESLint、Prettier、Vitest、ビルド（型チェックを含む。ビルド中は Laravel を呼ばない）
-- `main` のテストが通ったら、Railway が自動でデプロイする（Railway の「Wait for CI」を有効にし、テスト失敗時はデプロイしない）
+- `main` のテストが通ったら、Railway が自動でデプロイする（Railway の「Wait for CI」を有効にし、テスト失敗時はデプロイしない）。監視するパスが変わったサービスだけがデプロイされ、それ以外は SKIPPED になる
 
 ## テスト
 
