@@ -2,6 +2,9 @@
 .phpunit.cache
 node_modules
 vendor
+tests
+# Built in the dev container and may list dev-only packages (Boost, Pail).
+bootstrap/cache/*.php
 storage/logs/*
 storage/framework/cache/*
 storage/framework/sessions/*
