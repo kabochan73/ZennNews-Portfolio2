@@ -20,10 +20,11 @@ export function AppHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-neutral-200 bg-white">
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
-        <Link href="/home" className="text-lg font-bold">
+        <Link href="/home" className="text-2xl font-bold">
           Zenn News
         </Link>
-        <Suspense fallback={<UsernameSkeleton />}>
+        {/* useSearchParams needs a Suspense boundary, or the static pages fail to build. */}
+        <Suspense fallback={null}>
           <HeaderNav />
         </Suspense>
       </div>
@@ -57,22 +58,11 @@ function HeaderNav() {
           ))}
         </nav>
       )}
-      {data ? (
+      {data && (
         <span className="max-w-40 truncate text-sm text-neutral-600">
           {data.user.username}
         </span>
-      ) : (
-        <UsernameSkeleton />
       )}
     </div>
-  );
-}
-
-function UsernameSkeleton() {
-  return (
-    <span
-      aria-hidden
-      className="h-4 w-20 animate-pulse rounded bg-neutral-200"
-    />
   );
 }
