@@ -4,12 +4,15 @@ import type { ApiError } from "@/types/api";
 
 /**
  * Error response for the browser: only message / errors (never debug details such as
- * a stack trace), keeping the status and Retry-After.
+ * a stack trace), keeping the status and Retry-After. A body that isn't JSON (e.g. a
+ * proxy's 502 page) becomes a generic message.
  */
 export async function laravelErrorResponse(
   response: Response,
 ): Promise<Response> {
-  const { message, errors }: ApiError = await response.json();
+  const { message, errors }: ApiError = await response
+    .json()
+    .catch(() => ({ message: "エラーが発生しました" }));
 
   const headers = new Headers();
   const retryAfter = response.headers.get("Retry-After");

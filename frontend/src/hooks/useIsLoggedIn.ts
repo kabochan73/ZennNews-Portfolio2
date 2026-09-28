@@ -10,7 +10,10 @@ function hasLoggedInCookie(): boolean {
     .some((cookie) => cookie.startsWith(`${LOGGED_IN_COOKIE_NAME}=`));
 }
 
-/** Cookies don't notify changes; login and logout reload the page anyway. */
+/**
+ * Cookies don't notify changes. None is needed: the cookie is read again on every
+ * render, and no page that shows it stays on screen during login.
+ */
 function subscribe(): () => void {
   return () => {};
 }

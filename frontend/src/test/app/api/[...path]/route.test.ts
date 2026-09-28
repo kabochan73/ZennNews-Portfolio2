@@ -127,6 +127,20 @@ test("passes errors through as message only", async () => {
   expect(cookieStore.delete).not.toHaveBeenCalled();
 });
 
+test("turns an error body that isn't JSON into a generic message", async () => {
+  fetchMock.mockResolvedValue(
+    new Response("<html>Bad Gateway</html>", { status: 502 }),
+  );
+
+  const response = await GET(
+    new Request("http://localhost/api/me/home"),
+    context("me", "home"),
+  );
+
+  expect(response.status).toBe(502);
+  expect(await response.json()).toEqual({ message: "エラーが発生しました" });
+});
+
 test("sends no Authorization header without a cookie", async () => {
   cookieStore.get.mockReturnValue(undefined);
   fetchMock.mockResolvedValue(new Response(null, { status: 204 }));
