@@ -20,6 +20,9 @@ type Props = {
   articles: Article[];
 };
 
+/** Keeps the tag bar (mobile) and the tabs under the header while scrolling. */
+const STICKY_BAR = "sticky top-14 z-30 bg-white";
+
 const EMPTY_MESSAGES: Record<HomeTab, string> = {
   new: "新着記事はありません",
   read: "まだ読んだ記事はありません",
@@ -37,13 +40,19 @@ export function HomeFeed({ tag, articles }: Props) {
     <div className="mx-auto flex max-w-5xl">
       <TagSidebar tags={home?.favorite_tags} activeSlug={tag.slug} />
       <div className="min-w-0 flex-1">
-        <TagBar tags={home?.favorite_tags} activeSlug={tag.slug} />
         {home ? (
-          <TagArticles articles={articles} home={home} />
+          <TagArticles articles={articles} home={home} tag={tag} />
         ) : (
           // Until the reads arrive, NEW can't be told apart from READ.
           <>
-            <HomeTabs activeTab="new" counts={undefined} onChange={() => {}} />
+            <div className={STICKY_BAR}>
+              <TagBar tags={undefined} activeSlug={tag.slug} />
+              <HomeTabs
+                activeTab="new"
+                counts={undefined}
+                onChange={() => {}}
+              />
+            </div>
             <ArticleListSkeleton />
           </>
         )}
@@ -55,9 +64,11 @@ export function HomeFeed({ tag, articles }: Props) {
 function TagArticles({
   articles,
   home,
+  tag,
 }: {
   articles: Article[];
   home: MyHome;
+  tag: Tag;
 }) {
   const [activeTab, setActiveTab] = useState<HomeTab>("new");
   // Read IDs as of when the current tab was opened. NEW / READ and their counts
@@ -92,15 +103,18 @@ function TagArticles({
 
   return (
     <>
-      <HomeTabs
-        activeTab={activeTab}
-        counts={{
-          new: lists.new.length,
-          read: lists.read.length,
-          bookmark: lists.bookmark.length,
-        }}
-        onChange={changeTab}
-      />
+      <div className={STICKY_BAR}>
+        <TagBar tags={home.favorite_tags} activeSlug={tag.slug} />
+        <HomeTabs
+          activeTab={activeTab}
+          counts={{
+            new: lists.new.length,
+            read: lists.read.length,
+            bookmark: lists.bookmark.length,
+          }}
+          onChange={changeTab}
+        />
+      </div>
       <ArticleList
         articles={lists[activeTab]}
         bookmarkedIds={bookmarkedIds}
