@@ -29,16 +29,21 @@ frontend/
 │   │       └── [...path]/route.ts         それ以外：Cookie のトークンを付けて Laravel へ中継
 │   ├── proxy.ts                           … 未ログインで /home 以下を開いたら /login へ
 │   ├── components/
-│   │   ├── ui/                            自作の汎用部品（Button、Input、Toast、Skeleton）
-│   │   ├── layout/                        PublicHeader、AppHeader、BottomNav、Footer
-│   │   ├── home/                          TagBar、TagSidebar、HomeTabs、ArticleCard、ArticleList
+│   │   ├── ui/                            自作の汎用部品（Button、TextField、Toast）
+│   │   ├── layout/                        PublicHeader、AppHeader、BottomNav、Footer、nav.ts（HOME / TAGS の定義）
+│   │   ├── top/                           トップページの部品（TopHeader、Hero、Features、ZennComparison、ClosingCta、StartButtons）
+│   │   ├── home/                          HomeEntry（/home の入り口）、HomeFeed、TagBar、TagSidebar、HomeTabs、ArticleCard、ArticleList
 │   │   ├── tags/                          TagSelector（カテゴリ別のタグ選択）
-│   │   └── auth/                          LoginForm、RegisterForm
-│   ├── hooks/                             TanStack Query のフック（useMyHome、useMarkAsRead、useToggleBookmark など）
+│   │   └── auth/                          LoginForm、RegisterForm、form-errors.ts（API のエラーをフォームに表示）
+│   ├── hooks/                             useMyHome、useMarkAsRead、useToggleBookmark（TanStack Query）、usePrefetchTagPages（お気に入りタグの先読み）、useIsLoggedIn（ログイン中の目印の Cookie）
 │   ├── lib/
 │   │   ├── api-client.ts                  ブラウザ → Next.js の /api を呼ぶ関数（エラーの形をそろえる）
 │   │   ├── laravel.ts                     サーバー側 → Laravel を呼ぶ関数（server-only）
-│   │   ├── auth-cookie.ts                 Cookie の名前と設定（HttpOnly、1年）
+│   │   ├── laravel-response.ts            Laravel の返事をブラウザ向けに整える（エラーは message / errors だけにする）
+│   │   ├── auth-route.ts                  ログイン・新規登録の Route Handler の共通処理
+│   │   ├── auth-cookie.ts                 Cookie の保存・削除（HttpOnly、1年）
+│   │   ├── cookie-names.ts                Cookie の名前（ブラウザ側からも使う）
+│   │   ├── client-ip.ts                   訪問者の IP（Railway の X-Real-IP）
 │   │   ├── schemas.ts                     Zod のスキーマ（ログイン、新規登録）
 │   │   └── format.ts                      日時の表示（9/23 14:05）
 │   ├── types/api.ts                       User、Tag、Article の型（API 設計書と一致させる）
