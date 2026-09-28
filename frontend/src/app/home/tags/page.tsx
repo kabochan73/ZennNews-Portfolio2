@@ -25,7 +25,7 @@ export default async function TagSettingsPage({
   ]);
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8">
+    <div className="mx-auto max-w-3xl px-4 pt-8">
       <h1 className="text-2xl font-bold">興味のあるタグを選択</h1>
       <p className="mt-2 text-sm text-neutral-600">
         選択したタグの最新記事を、ホームで表示します。
