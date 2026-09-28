@@ -3,7 +3,7 @@ import Link from "next/link";
 /** Header for the pages that don't need a login (top, login, register). */
 export function PublicHeader() {
   return (
-    <header className="border-b border-neutral-200">
+    <header className="border-b border-neutral-400">
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
         <Link href="/" className="text-lg font-bold">
           Zenn News

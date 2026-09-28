@@ -24,7 +24,7 @@ export function ArticleCard({
 }: Props) {
   return (
     <article
-      className={`flex gap-4 border-b border-neutral-200 px-4 py-4 transition-opacity ${
+      className={`flex gap-4 border-b border-neutral-400 px-4 py-4 transition-opacity ${
         faded ? "opacity-40" : ""
       }`}
     >

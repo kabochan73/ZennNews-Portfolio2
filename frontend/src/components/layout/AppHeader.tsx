@@ -18,7 +18,7 @@ import { useMyHome } from "@/hooks/useMyHome";
  */
 export function AppHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-neutral-200 bg-white">
+    <header className="sticky top-0 z-40 border-b border-neutral-400 bg-white">
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
         <Link href="/home" className="text-2xl font-bold">
           Zenn News

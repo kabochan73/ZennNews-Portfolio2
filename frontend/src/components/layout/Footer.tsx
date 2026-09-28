@@ -1,7 +1,7 @@
 /** Source credit and the unofficial notice, shown on every page. */
 export function Footer() {
   return (
-    <footer className="border-t border-neutral-200 px-4 py-6 text-center text-xs text-neutral-500">
+    <footer className="border-t border-neutral-400 px-4 py-6 text-center text-xs text-neutral-500">
       <p>
         記事の出典：
         <a

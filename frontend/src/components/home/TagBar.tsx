@@ -23,7 +23,7 @@ export function TagBar({ tags, activeSlug }: Props) {
   return (
     <nav
       aria-label="お気に入りタグ"
-      className="relative border-b border-neutral-200 lg:hidden"
+      className="relative border-b border-neutral-400 lg:hidden"
     >
       {tags ? (
         <ul className="flex [scrollbar-width:none] gap-2 overflow-x-auto px-4 py-3">

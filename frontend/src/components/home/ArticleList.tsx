@@ -54,7 +54,7 @@ export function ArticleListSkeleton({ count = 5 }: { count?: number }) {
       {Array.from({ length: count }, (_, index) => (
         <li
           key={index}
-          className="flex gap-4 border-b border-neutral-200 px-4 py-4"
+          className="flex gap-4 border-b border-neutral-400 px-4 py-4"
         >
           <div className="size-16 shrink-0 animate-pulse rounded-xl bg-neutral-200" />
           <div className="flex-1 space-y-2">

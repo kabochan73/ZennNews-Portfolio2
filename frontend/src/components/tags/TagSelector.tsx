@@ -115,7 +115,7 @@ function TagSelectorForm({
       })}
 
       <div
-        className={`fixed inset-x-0 z-30 border-t border-neutral-200 bg-white p-4 lg:bottom-0 ${
+        className={`fixed inset-x-0 z-30 border-t border-neutral-400 bg-white p-4 lg:bottom-0 ${
           isWelcome ? "bottom-0" : "bottom-16"
         }`}
       >

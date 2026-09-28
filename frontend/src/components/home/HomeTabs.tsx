@@ -21,7 +21,7 @@ export function HomeTabs({ activeTab, counts, onChange }: Props) {
     <div
       role="tablist"
       aria-label="記事の表示"
-      className="grid grid-cols-3 border-b border-neutral-200"
+      className="grid grid-cols-3 border-b border-neutral-400"
     >
       {TABS.map((tab) => {
         const selected = tab.id === activeTab;

@@ -15,7 +15,7 @@ export function TagSidebar({ tags, activeSlug }: Props) {
   return (
     <nav
       aria-label="お気に入りタグ"
-      className="hidden w-48 shrink-0 border-r border-neutral-200 py-6 pr-4 lg:block"
+      className="hidden w-48 shrink-0 border-r border-neutral-400 py-6 pr-4 lg:block"
     >
       <p className="px-3 text-xs font-bold tracking-widest text-neutral-500">
         MY TAGS

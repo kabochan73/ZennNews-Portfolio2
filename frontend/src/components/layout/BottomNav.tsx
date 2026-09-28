@@ -22,7 +22,7 @@ export function BottomNav() {
   const activeHref = activeNavHref(pathname);
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-neutral-200 bg-white lg:hidden">
+    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-neutral-400 bg-white lg:hidden">
       <ul className="grid h-16 grid-cols-2">
         {NAV_ITEMS.map((item) => (
           <li key={item.href}>
