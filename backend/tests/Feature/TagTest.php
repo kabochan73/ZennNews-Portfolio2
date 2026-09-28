@@ -21,13 +21,22 @@ test('tags can be listed without logging in', function () {
     $this->getJson('/api/tags')->assertOk()->assertJsonCount(1, 'categories');
 });
 
-test('the public tag list is limited to 60 requests per minute per IP address', function () {
+test('the public tag list is limited to 60 requests per minute per visitor IP', function () {
+    $visitor = fn (string $ip) => $this->withHeader('X-Forwarded-For', $ip)->getJson('/api/tags');
+
     foreach (range(1, 60) as $_) {
-        $this->getJson('/api/tags')->assertOk();
+        $visitor('203.0.113.1')->assertOk();
     }
 
-    $this->getJson('/api/tags')
+    $visitor('203.0.113.1')
         ->assertTooManyRequests()
         ->assertJsonPath('message', 'しばらく時間をおいてお試しください')
         ->assertHeader('Retry-After');
+    $visitor('203.0.113.2')->assertOk();
+});
+
+test('calls from the Next.js server itself (no X-Forwarded-For) are not limited', function () {
+    foreach (range(1, 61) as $_) {
+        $this->getJson('/api/tags')->assertOk();
+    }
 });

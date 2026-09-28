@@ -28,10 +28,16 @@ class AppServiceProvider extends ServiceProvider
             ->by($request->ip())
             ->response($this->tooManyRequestsResponse(...)));
 
-        // Public (no login) APIs such as tags and tag articles, per IP address.
-        RateLimiter::for('public-api', fn (Request $request): Limit => Limit::perMinute(60)
-            ->by($request->ip())
-            ->response($this->tooManyRequestsResponse(...)));
+        // Public (no login) APIs such as tags and tag articles, per visitor IP.
+        // Calls relayed from a browser carry the visitor's X-Forwarded-For. Calls from
+        // the Next.js server itself (building the shared ISR pages) carry none and are
+        // not limited: they would all count as one IP, so a burst of page builds
+        // (e.g. many unknown tag URLs) could make real tag pages fail to build.
+        RateLimiter::for('public-api', fn (Request $request): Limit => $request->headers->has('X-Forwarded-For')
+            ? Limit::perMinute(60)
+                ->by($request->ip())
+                ->response($this->tooManyRequestsResponse(...))
+            : Limit::none());
     }
 
     /**

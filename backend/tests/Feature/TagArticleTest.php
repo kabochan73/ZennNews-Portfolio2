@@ -74,7 +74,8 @@ test('an unknown tag is 404', function () {
 });
 
 test('tag articles can be fetched without logging in, with the public rate limit', function () {
-    $this->getJson('/api/tags/nextjs/articles')
+    $this->withHeader('X-Forwarded-For', '203.0.113.1')
+        ->getJson('/api/tags/nextjs/articles')
         ->assertOk()
         ->assertHeader('X-RateLimit-Limit', 60);
 });
