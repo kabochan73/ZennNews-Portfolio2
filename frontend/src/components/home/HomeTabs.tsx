@@ -33,10 +33,10 @@ export function HomeTabs({ activeTab, counts, onChange }: Props) {
             role="tab"
             aria-selected={selected}
             onClick={() => onChange(tab.id)}
-            className={`flex items-center justify-center gap-1.5 border-b-2 py-3 text-sm ${
+            className={`flex items-center justify-center gap-1.5 py-3 text-sm ${
               selected
-                ? "border-black font-bold text-black"
-                : "border-transparent text-neutral-400"
+                ? "bg-neutral-100 font-bold text-black"
+                : "text-neutral-400 hover:bg-neutral-50"
             }`}
           >
             {tab.label}
