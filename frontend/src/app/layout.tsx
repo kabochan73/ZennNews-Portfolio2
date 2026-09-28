@@ -14,7 +14,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="ja" className="h-full antialiased">
-      <body className="flex min-h-full flex-col">
+      {/* While the fixed mobile tabs are shown, pad the whole page (footer included) above them. */}
+      <body className="flex min-h-full flex-col max-lg:has-[[data-bottom-nav]]:pb-16">
         <Providers>
           <div className="flex-1">{children}</div>
           <Footer />

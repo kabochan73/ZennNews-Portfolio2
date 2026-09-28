@@ -16,12 +16,12 @@ type Props = {
   isWelcome: boolean;
 };
 
-/** Waits for the current favorites, then starts the selection from them. */
+/** Waits for the current favorites (showing nothing meanwhile), then starts the selection from them. */
 export function TagSelector({ categories, isWelcome }: Props) {
   const { data } = useMyHome();
 
   if (!data) {
-    return <TagSelectorSkeleton />;
+    return null;
   }
 
   return (
@@ -73,7 +73,7 @@ function TagSelectorForm({
   }
 
   return (
-    <div className="pb-28">
+    <div>
       {categories.map((category) => {
         const selectedCount = category.tags.filter((tag) =>
           selectedIds.includes(tag.id),
@@ -114,42 +114,22 @@ function TagSelectorForm({
         );
       })}
 
+      {/* Sticky, not fixed: it rides the bottom of the screen while scrolling, then
+          stops at the end of the list instead of covering the footer. */}
       <div
-        className={`fixed inset-x-0 z-30 border-t border-neutral-400 bg-white p-4 lg:bottom-0 ${
+        className={`sticky z-30 -mx-4 mt-8 border-t border-neutral-400 bg-white p-4 lg:bottom-0 ${
           isWelcome ? "bottom-0" : "bottom-16"
         }`}
       >
-        <div className="mx-auto max-w-3xl">
-          <Button
-            type="button"
-            disabled={selectedIds.length === 0}
-            loading={save.isPending}
-            onClick={() => save.mutate(selectedIds)}
-          >
-            保存する
-          </Button>
-        </div>
+        <Button
+          type="button"
+          disabled={selectedIds.length === 0}
+          loading={save.isPending}
+          onClick={() => save.mutate(selectedIds)}
+        >
+          保存する
+        </Button>
       </div>
-    </div>
-  );
-}
-
-function TagSelectorSkeleton() {
-  return (
-    <div aria-hidden className="mt-8 space-y-8">
-      {[0, 1, 2].map((section) => (
-        <div key={section}>
-          <div className="h-5 w-32 animate-pulse rounded bg-neutral-200" />
-          <div className="mt-3 flex flex-wrap gap-2">
-            {[0, 1, 2, 3, 4].map((chip) => (
-              <div
-                key={chip}
-                className="h-8 w-20 animate-pulse rounded-full bg-neutral-200"
-              />
-            ))}
-          </div>
-        </div>
-      ))}
     </div>
   );
 }

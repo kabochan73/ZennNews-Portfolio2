@@ -11,8 +11,7 @@ export default function HomeLayout({ children }: LayoutProps<"/home">) {
   return (
     <>
       <AppHeader />
-      {/* Bottom padding keeps the content clear of the fixed mobile tabs. */}
-      <main className="pb-16 lg:pb-0">{children}</main>
+      <main>{children}</main>
       <Suspense fallback={null}>
         <BottomNav />
       </Suspense>
