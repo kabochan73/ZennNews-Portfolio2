@@ -22,7 +22,7 @@ export function TagSidebar({ tags, activeSlug }: Props) {
         <p className="px-3 text-xl font-bold tracking-widest text-neutral-800">
           MY TAGS
         </p>
-        {tags ? (
+        {tags && (
           <ul className="mt-3 space-y-1">
             {tags.map((tag) => {
               const active = tag.slug === activeSlug;
@@ -47,15 +47,6 @@ export function TagSidebar({ tags, activeSlug }: Props) {
               );
             })}
           </ul>
-        ) : (
-          <div aria-hidden className="mt-3 space-y-2 px-3">
-            {[0, 1, 2, 3].map((row) => (
-              <div
-                key={row}
-                className="h-5 w-24 animate-pulse rounded bg-neutral-200"
-              />
-            ))}
-          </div>
         )}
       </div>
     </nav>

@@ -37,18 +37,19 @@ function renderEntry() {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
-  render(
+
+  return render(
     <QueryClientProvider client={queryClient}>
       <HomeEntry />
     </QueryClientProvider>,
   );
 }
 
-test("shows the home skeleton while loading", () => {
+test("shows nothing while loading", () => {
   fetchMock.mockReturnValue(new Promise(() => {}));
-  renderEntry();
+  const { container } = renderEntry();
 
-  expect(screen.getAllByRole("tab")).toHaveLength(3);
+  expect(container).toBeEmptyDOMElement();
   expect(replace).not.toHaveBeenCalled();
 });
 

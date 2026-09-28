@@ -40,14 +40,7 @@ export function HomeTabs({ activeTab, counts, onChange }: Props) {
             }`}
           >
             {tab.label}
-            {counts ? (
-              <span>{counts[tab.id]}</span>
-            ) : (
-              <span
-                aria-hidden
-                className="h-3 w-5 animate-pulse rounded bg-neutral-200"
-              />
-            )}
+            {counts && <span>{counts[tab.id]}</span>}
           </button>
         );
       })}

@@ -3,8 +3,6 @@
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-import { ArticleListSkeleton } from "@/components/home/ArticleList";
-import { HomeTabs } from "@/components/home/HomeTabs";
 import { useMyHome } from "@/hooks/useMyHome";
 
 /**
@@ -42,11 +40,6 @@ export function HomeEntry() {
     );
   }
 
-  // Same look as the home screen while loading and moving.
-  return (
-    <div className="mx-auto max-w-5xl">
-      <HomeTabs activeTab="new" counts={undefined} onChange={() => {}} />
-      <ArticleListSkeleton />
-    </div>
-  );
+  // Nothing to show while loading and moving on.
+  return null;
 }

@@ -31,7 +31,7 @@ describe.each([
     expect(links[0]).not.toHaveAttribute("aria-current");
   });
 
-  test("shows placeholders while the favorites load", () => {
+  test("shows no links while the favorites load", () => {
     render(<Component tags={undefined} activeSlug="laravel" />);
 
     expect(screen.queryAllByRole("link")).toHaveLength(0);

@@ -46,24 +46,3 @@ export function ArticleList({
     </ul>
   );
 }
-
-/** Card-shaped gray placeholders while the user's data loads. */
-export function ArticleListSkeleton({ count = 5 }: { count?: number }) {
-  return (
-    <ul aria-hidden>
-      {Array.from({ length: count }, (_, index) => (
-        <li
-          key={index}
-          className="flex gap-4 border-b border-neutral-400 px-4 py-4"
-        >
-          <div className="size-16 shrink-0 animate-pulse rounded-xl bg-neutral-200" />
-          <div className="flex-1 space-y-2">
-            <div className="h-4 w-full animate-pulse rounded bg-neutral-200" />
-            <div className="h-4 w-2/3 animate-pulse rounded bg-neutral-200" />
-            <div className="h-3 w-1/3 animate-pulse rounded bg-neutral-200" />
-          </div>
-        </li>
-      ))}
-    </ul>
-  );
-}

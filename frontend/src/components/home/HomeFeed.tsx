@@ -2,10 +2,7 @@
 
 import { useState } from "react";
 
-import {
-  ArticleList,
-  ArticleListSkeleton,
-} from "@/components/home/ArticleList";
+import { ArticleList } from "@/components/home/ArticleList";
 import { type HomeTab, HomeTabs } from "@/components/home/HomeTabs";
 import { TagBar } from "@/components/home/TagBar";
 import { TagSidebar } from "@/components/home/TagSidebar";
@@ -43,18 +40,11 @@ export function HomeFeed({ tag, articles }: Props) {
         {home ? (
           <TagArticles articles={articles} home={home} tag={tag} />
         ) : (
-          // Until the reads arrive, NEW can't be told apart from READ.
-          <>
-            <div className={STICKY_BAR}>
-              <TagBar tags={undefined} activeSlug={tag.slug} />
-              <HomeTabs
-                activeTab="new"
-                counts={undefined}
-                onChange={() => {}}
-              />
-            </div>
-            <ArticleListSkeleton />
-          </>
+          // Until the reads arrive, NEW can't be told apart from READ, so no articles yet.
+          <div className={STICKY_BAR}>
+            <TagBar tags={undefined} activeSlug={tag.slug} />
+            <HomeTabs activeTab="new" counts={undefined} onChange={() => {}} />
+          </div>
         )}
       </div>
     </div>
