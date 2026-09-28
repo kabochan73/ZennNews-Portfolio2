@@ -31,10 +31,12 @@ export function TagBar({ tags, activeSlug }: Props) {
             const active = tag.slug === activeSlug;
 
             return (
+              // prefetch: the whole page (see usePrefetchTagPages); again on scroll or tap once stale.
               <li key={tag.id} className="shrink-0">
                 <Link
                   ref={active ? activeRef : undefined}
                   href={`/home/${tag.slug}`}
+                  prefetch
                   aria-current={active ? "page" : undefined}
                   className={`block rounded-full border px-4 py-1.5 text-sm ${
                     active

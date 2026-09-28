@@ -22,12 +22,12 @@ const tags: Tag[] = [
   { id: 3, slug: "aws", name: "AWS" },
 ];
 
-test("prefetches every favorite tag except the current one", () => {
+test("fully prefetches every favorite tag except the current one", () => {
   renderHook(() => usePrefetchTagPages(tags, "laravel"));
 
-  expect(prefetch.mock.calls.map(([href]) => href)).toEqual([
-    "/home/nextjs",
-    "/home/aws",
+  expect(prefetch.mock.calls).toEqual([
+    ["/home/nextjs", { kind: "full" }],
+    ["/home/aws", { kind: "full" }],
   ]);
 });
 

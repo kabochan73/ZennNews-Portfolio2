@@ -28,9 +28,11 @@ export function TagSidebar({ tags, activeSlug }: Props) {
               const active = tag.slug === activeSlug;
 
               return (
+                // prefetch: the whole page (see usePrefetchTagPages); again on scroll or tap once stale.
                 <li key={tag.id}>
                   <Link
                     href={`/home/${tag.slug}`}
+                    prefetch
                     aria-current={active ? "page" : undefined}
                     className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm ${
                       active
