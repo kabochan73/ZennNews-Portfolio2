@@ -12,7 +12,7 @@ export function ZennComparison() {
       <div className="grid gap-10 rounded-2xl bg-neutral-100 p-8 md:grid-cols-2 md:p-12">
         <div>
           <h2 className="text-2xl font-bold">Zennとの違い</h2>
-          <p className="mt-2 text-sm text-neutral-600">
+          <p className="mt-2 text-lg text-neutral-800">
             Zenn の記事を読むための、もう一つの入口。
           </p>
           <ul className="mt-6 space-y-3">
@@ -30,9 +30,9 @@ export function ZennComparison() {
           <p className="flex gap-3 leading-relaxed font-bold">
             <span aria-hidden>✓</span>
             <span>
-              そのかわり、
+              自分が追いたい技術の、
               <br />
-              自分が追いたい技術だけを、
+              最新記事だけを、
               <br />
               効率よく追える。
             </span>

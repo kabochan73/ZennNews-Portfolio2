@@ -14,13 +14,8 @@ test("shows the hero, the four features and the comparison with Zenn", () => {
   ).toBeInTheDocument();
   expect(
     screen.getAllByRole("heading", { level: 3 }).map((h) => h.textContent),
-  ).toEqual([
-    "タグを選ぶ",
-    "新しい順でチェック",
-    "NEW / READ で既読管理",
-    "あとで読む",
-  ]);
-  expect(screen.getByText(/最大100件まで保存できる/)).toBeInTheDocument();
+  ).toEqual(["タグを選ぶ", "毎朝、最新記事をお届け", "NEW / READ", "BOOKMARK"]);
+  expect(screen.getByText(/最大100件まで保存可能/)).toBeInTheDocument();
   expect(
     screen.getByRole("heading", { name: "Zennとの違い" }),
   ).toBeInTheDocument();
