@@ -8,6 +8,10 @@ import { ToastProvider } from "@/components/ui/Toast";
 import { MY_HOME_QUERY_KEY } from "@/hooks/useMyHome";
 import type { Article, MyHome, Tag } from "@/types/api";
 
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ prefetch: vi.fn() }),
+}));
+
 function article(id: number, title: string): Article {
   return {
     id,

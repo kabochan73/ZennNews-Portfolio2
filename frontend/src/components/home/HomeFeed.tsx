@@ -8,6 +8,7 @@ import { TagBar } from "@/components/home/TagBar";
 import { TagSidebar } from "@/components/home/TagSidebar";
 import { useMarkAsRead } from "@/hooks/useMarkAsRead";
 import { useMyHome } from "@/hooks/useMyHome";
+import { usePrefetchTagPages } from "@/hooks/usePrefetchTagPages";
 import { useToggleBookmark } from "@/hooks/useToggleBookmark";
 import type { Article, MyHome, Tag } from "@/types/api";
 
@@ -68,6 +69,7 @@ function TagArticles({
     () => new Set(home.read_article_ids),
   );
   const markAsRead = useMarkAsRead();
+  usePrefetchTagPages(home.favorite_tags, tag.slug);
   const toggleBookmark = useToggleBookmark();
 
   const readIds = new Set(home.read_article_ids);
